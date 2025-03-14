@@ -25,7 +25,7 @@
         /* Card styles */
         .card {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -118,6 +118,83 @@
             color: #888;
         }
 
+        /* Terminal styles */
+        .terminal {
+            margin-top: 1.5rem;
+            background-color: #1e1e1e;
+            border-radius: 6px;
+            padding: 1rem;
+            color: #f0f0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .terminal-title {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .command {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .command:last-child {
+            margin-bottom: 0;
+        }
+
+        .prompt {
+            color: #7eda28;
+            margin-right: 0.5rem;
+        }
+
+        .command-text {
+            color: #f0f0f0;
+            word-break: break-all;
+        }
+
+        .copy-button {
+            background-color: transparent;
+            border: none;
+            color: #7eda28;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
+            margin-left: auto;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+
+        .copy-button:hover {
+            background-color: rgba(126, 218, 40, 0.1);
+        }
+
+        .terminal-container {
+            position: relative;
+        }
+
+        .copy-all {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #7eda28;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+
+        .copy-all:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
         /* Spinner animation */
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -174,6 +251,33 @@
                 </span>
             </button>
             <p class="terms">By downloading, you agree to the repository's license terms.</p>
+            
+            <div class="terminal-title">Or use CLI commands:</div>
+            <div class="terminal-container">
+                <div class="terminal">
+                    <div class="command">
+                        <span class="prompt">$</span>
+                        <span class="command-text">git clone https://github.com/eris4444/erissms</span>
+                        <button class="copy-button" data-command="git clone https://github.com/eris4444/erissms">Copy</button>
+                    </div>
+                    <div class="command">
+                        <span class="prompt">$</span>
+                        <span class="command-text">cd erissms</span>
+                        <button class="copy-button" data-command="cd erissms">Copy</button>
+                    </div>
+                    <div class="command">
+                        <span class="prompt">$</span>
+                        <span class="command-text">pip install -r requirements.txt</span>
+                        <button class="copy-button" data-command="pip install -r requirements.txt">Copy</button>
+                    </div>
+                    <div class="command">
+                        <span class="prompt">$</span>
+                        <span class="command-text">python3 main.py</span>
+                        <button class="copy-button" data-command="python3 main.py">Copy</button>
+                    </div>
+                </div>
+                <button class="copy-all">Copy All</button>
+            </div>
         </div>
     </div>
 
@@ -183,7 +287,7 @@
             const spinner = document.getElementById('spinner');
             
             // Replace with your actual GitHub repository ZIP URL
-            const githubZipUrl = "https://github.com/username/repository/archive/refs/heads/main.zip";
+            const githubZipUrl = "https://github.com/eris4444/erissms/archive/refs/heads/main.zip";
             
             downloadBtn.addEventListener('click', function() {
                 // Show loading state
@@ -193,7 +297,7 @@
                 // Create a temporary anchor element to trigger the download
                 const link = document.createElement('a');
                 link.href = githubZipUrl;
-                link.setAttribute('download', 'github-repository.zip');
+                link.setAttribute('download', 'erissms.zip');
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -203,6 +307,40 @@
                     downloadBtn.disabled = false;
                     spinner.style.display = 'none';
                 }, 2000);
+            });
+
+            // Copy command functionality
+            const copyButtons = document.querySelectorAll('.copy-button');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const command = this.getAttribute('data-command');
+                    navigator.clipboard.writeText(command).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Copied!';
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 1500);
+                    });
+                });
+            });
+
+            // Copy all commands functionality
+            const copyAllButton = document.querySelector('.copy-all');
+            copyAllButton.addEventListener('click', function() {
+                const commands = [
+                    'git clone https://github.com/eris4444/erissms',
+                    'cd erissms',
+                    'pip install -r requirements.txt',
+                    'python3 main.py'
+                ].join('\n');
+                
+                navigator.clipboard.writeText(commands).then(() => {
+                    const originalText = this.textContent;
+                    this.textContent = 'All Copied!';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 1500);
+                });
             });
         });
     </script>
